@@ -18,6 +18,12 @@ FORCE_HOME_STORAGE_PCT=92.4% \
 ALERT_REPORT_FILE="$OUTPUT_FILE" \
 "${SCRIPT_DIR}/alert_check.sh" --no-send --force >/tmp/server_monitoring_alert_test.log 2>&1
 
+if [[ ! -s "$OUTPUT_FILE" ]]; then
+  printf 'Failed to create a non-empty alert report: %s\n' "$OUTPUT_FILE" >&2
+  printf 'See log: /tmp/server_monitoring_alert_test.log\n' >&2
+  exit 1
+fi
+
 python3 - "$OUTPUT_FILE" "$HTML_FILE" <<'PY'
 import os
 import sys

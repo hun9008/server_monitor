@@ -12,7 +12,14 @@ if [[ -f "${SCRIPT_DIR}/.env" ]]; then
   set +a
 fi
 
-"${SCRIPT_DIR}/monitor.sh" --print --no-send > "$OUTPUT_FILE"
+REPORT_FILE="$OUTPUT_FILE" "${SCRIPT_DIR}/monitor.sh" --no-send
+
+if [[ ! -s "$OUTPUT_FILE" ]]; then
+  printf 'Failed to create a non-empty snapshot report: %s\n' "$OUTPUT_FILE" >&2
+  printf 'Try: REPORT_FILE=%q %q --no-send\n' "$OUTPUT_FILE" "${SCRIPT_DIR}/monitor.sh" >&2
+  exit 1
+fi
+
 python3 - "$OUTPUT_FILE" "$HTML_FILE" <<'PY'
 import os
 import sys
