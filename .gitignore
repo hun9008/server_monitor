@@ -1,0 +1,9 @@
+.env
+*.pyc
+__pycache__/
+alert_state/
+test.md
+test.html
+alert_test.md
+*.log
+.env.example

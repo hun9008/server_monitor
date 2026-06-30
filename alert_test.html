@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      body {
+        margin: 0;
+        padding: 24px;
+        background: #f6f8fb;
+        color: #111827;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      .wrap {
+        max-width: 920px;
+        margin: 0 auto;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 22px 24px;
+      }
+      .urgent-wrap {
+        border-color: #fecaca;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 24px;
+        line-height: 1.25;
+      }
+      .urgent-title {
+        color: #b91c1c;
+      }
+      h2 {
+        margin: 26px 0 10px;
+        padding-top: 18px;
+        border-top: 1px solid #e5e7eb;
+        font-size: 16px;
+      }
+      p {
+        margin: 6px 0 12px;
+        color: #4b5563;
+      }
+      code {
+        padding: 1px 5px;
+        border-radius: 4px;
+        background: #f3f4f6;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 12px;
+      }
+      .metric-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 8px 0 14px;
+        font-size: 13px;
+      }
+      .metric-table th {
+        text-align: left;
+        background: #f9fafb;
+        color: #374151;
+        border: 1px solid #e5e7eb;
+        padding: 8px 10px;
+      }
+      .metric-table td {
+        border: 1px solid #e5e7eb;
+        padding: 8px 10px;
+        vertical-align: top;
+      }
+      .metric-table td:not(:first-child),
+      .metric-table th:not(:first-child) {
+        text-align: right;
+      }
+      .code-block {
+        margin: 8px 0 14px;
+        padding: 12px 14px;
+        border-radius: 8px;
+        background: #111827;
+        color: #e5e7eb;
+        overflow-x: auto;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 13px;
+        line-height: 1.45;
+        white-space: pre;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap urgent-wrap">
+      <h1 class="urgent-title">Urgent Server Attention Required</h1>
+<p><code>dilab-sc-02.localdomain</code> | <code>2026-06-30 13:50:46 KST</code></p>
+<h2>Warning Targets</h2>
+<p>Immediate attention required: memory or storage usage has exceeded the <span style="color:#ca8a04; font-weight:700;">70%</span> warning threshold.</p>
+<p>Review the high-usage targets first, then clean up unnecessary files or inspect running workloads as needed.</p>
+<table class="metric-table"><thead><tr><th>Priority</th><th>Target</th><th>Current</th><th>Threshold</th><th>Status</th><th>Recommended Action</th></tr></thead><tbody><tr><td>1</td><td>Memory usage</td><td><span style="color:#ca8a04; font-weight:700;">76.8%</span></td><td><span style="color:#ca8a04; font-weight:700;">70%</span> warning</td><td><span style="display:inline-block; padding:2px 8px; border-radius:999px; background:#fef3c7; color:#92400e; font-weight:700; font-size:12px;">WARNING</span></td><td>Check high-memory workloads; stop unnecessary processes if needed</td></tr><tr><td>2</td><td>Home storage usage</td><td><span style="color:#dc2626; font-weight:700;">92.4%</span></td><td><span style="color:#dc2626; font-weight:700;">90%</span> critical</td><td><span style="display:inline-block; padding:2px 8px; border-radius:999px; background:#fee2e2; color:#991b1b; font-weight:700; font-size:12px;">CRITICAL</span></td><td>Clean up large files under <code>/home</code>; archive or remove old experiment outputs</td></tr></tbody></table>
+<h2>Critical Resource Bars</h2>
+<pre class="code-block">Memory         [###############-----]  76.8%
+Home storage   [##################--]  92.4%</pre>
+<h2>Snapshot</h2>
+<table class="metric-table"><thead><tr><th>Metric</th><th>Value</th><th>Status</th></tr></thead><tbody><tr><td>CPU usage</td><td><span style="color:#15803d; font-weight:700;">3.3%</span></td><td><span style="display:inline-block; padding:2px 8px; border-radius:999px; background:#dcfce7; color:#166534; font-weight:700; font-size:12px;">OK</span></td></tr><tr><td>Memory usage</td><td><span style="color:#ca8a04; font-weight:700;">76.8%</span></td><td><span style="display:inline-block; padding:2px 8px; border-radius:999px; background:#fef3c7; color:#92400e; font-weight:700; font-size:12px;">WARNING</span></td></tr><tr><td>Total storage usage</td><td><span style="color:#15803d; font-weight:700;">68.5%</span></td><td><span style="display:inline-block; padding:2px 8px; border-radius:999px; background:#dcfce7; color:#166534; font-weight:700; font-size:12px;">OK</span></td></tr><tr><td>Home storage usage</td><td><span style="color:#dc2626; font-weight:700;">92.4%</span></td><td><span style="display:inline-block; padding:2px 8px; border-radius:999px; background:#fee2e2; color:#991b1b; font-weight:700; font-size:12px;">CRITICAL</span></td></tr><tr><td>GPU 0 utilization</td><td><span style="color:#15803d; font-weight:700;">0%</span></td><td><span style="display:inline-block; padding:2px 8px; border-radius:999px; background:#dcfce7; color:#166534; font-weight:700; font-size:12px;">OK</span></td></tr><tr><td>GPU 1 utilization</td><td><span style="color:#15803d; font-weight:700;">0%</span></td><td><span style="display:inline-block; padding:2px 8px; border-radius:999px; background:#dcfce7; color:#166534; font-weight:700; font-size:12px;">OK</span></td></tr><tr><td>Failed services</td><td>0</td><td><span style="display:inline-block; padding:2px 8px; border-radius:999px; background:#dcfce7; color:#166534; font-weight:700; font-size:12px;">OK</span></td></tr></tbody></table>
+<h2>Storage Detail</h2>
+<table class="metric-table"><thead><tr><th>Mount</th><th>Size</th><th>Used</th><th>Available</th><th>Use</th></tr></thead><tbody><tr><td><code>/sys/firmware/efi/efivars</code></td><td>512K</td><td>163K</td><td>345K</td><td><span style="color:#15803d; font-weight:700;">33%</span></td></tr><tr><td><code>/</code></td><td>906G</td><td>24G</td><td>837G</td><td><span style="color:#15803d; font-weight:700;">3%</span></td></tr><tr><td><code>/boot/efi</code></td><td>1.1G</td><td>6.2M</td><td>1.1G</td><td><span style="color:#15803d; font-weight:700;">1%</span></td></tr><tr><td><code>/home</code></td><td>7.0T</td><td>3.3T</td><td>3.8T</td><td><span style="color:#15803d; font-weight:700;">47%</span></td></tr></tbody></table>
+<h2>Home Directory Usage</h2>
+<pre class="code-block">/home capacity: 7.0T
+
+hun        2.9TiB    41.60%  [########------------]
+psm        114GiB     1.59%  [--------------------]
+heek       73GiB      1.03%  [--------------------]
+mysns      93MiB      0.00%  [--------------------]
+shared     0B         0.00%  [--------------------]</pre>
+<h2>Memory Detail</h2>
+<table class="metric-table"><thead><tr><th>Resource</th><th>Total</th><th>Used</th><th>Free</th><th>Buff/Cache</th><th>Available</th></tr></thead><tbody><tr><td>Memory</td><td>251Gi</td><td>13Gi</td><td>18Gi</td><td>221Gi</td><td>238Gi</td></tr><tr><td>Swap</td><td>31Gi</td><td>3.2Mi</td><td>31Gi</td><td>-</td><td>-</td></tr></tbody></table>
+<h2>System Snapshot</h2>
+<pre class="code-block">Host:          dilab-sc-02.localdomain
+Kernel:        Linux 6.8.0-111-generic x86_64 GNU/Linux
+CPU cores:     64
+Load average:  1.35 1.38 1.58
+CPU usage:     3.3%
+Uptime:        up 1 week, 6 days, 1 hour, 44 minutes</pre>
+<h2>GPU Detail</h2>
+<table class="metric-table"><thead><tr><th>GPU</th><th>Model</th><th>Util</th><th>Memory</th><th>Temp</th><th>Power</th></tr></thead><tbody><tr><td>0</td><td>NVIDIA RTX PRO 6000 Blackwell Server Edition</td><td><span style="color:#15803d; font-weight:700;">0%</span></td><td>581 / 97887 MiB</td><td>32C</td><td>87.67 / 600.00 W</td></tr><tr><td>1</td><td>NVIDIA RTX PRO 6000 Blackwell Server Edition</td><td><span style="color:#15803d; font-weight:700;">0%</span></td><td>0 / 97887 MiB</td><td>28C</td><td>34.27 / 600.00 W</td></tr></tbody></table>
+    </div>
+  </body>
+</html>
