@@ -10,6 +10,7 @@ Server monitoring email scripts for Ubuntu servers.
 | `monitor.sh` | Weekly snapshot report entrypoint |
 | `alert_check.sh` | Hourly memory/storage alert checker |
 | `send_smtp.py` | SMTP sender and HTML email renderer |
+| `dilab_logo.png` | Optional logo embedded at the top of HTML email |
 | `save_test_report.sh` | Writes a snapshot preview to `test.md` |
 | `save_alert_test_report.sh` | Writes an alert preview to `alert_test.md` |
 | `install_cron.sh` | Installs cron entries for snapshot and alert automation |
@@ -51,6 +52,9 @@ MAIL_FROM=younghune135@gmail.com
 SMTP_HOST=smtp.gmail.com
 SMTP_USER=younghune135@gmail.com
 SMTP_PASS="gmail app password"
+# LOGO_MODE=cid
+# LOGO_PATH=/path/to/server_monitoring/dilab_logo.png
+# LOGO_URL=https://example.com/dilab_logo.png
 ```
 
 5. Test snapshot preview:
@@ -130,3 +134,7 @@ Add:
 - `nvidia-smi` is optional. GPU sections degrade gracefully when NVIDIA tools are unavailable.
 - Python 3 is required for SMTP/HTML email.
 - Use a Gmail app password, not your normal Google account password.
+- `LOGO_MODE=cid` is the default and has the best Gmail/Outlook compatibility. It uses an inline MIME image part, so some clients may still show the logo as an attachment-like item.
+- If `LOGO_URL` is set, the HTML email uses that image URL with no image attachment. This is the recommended option when the logo must appear without any attachment.
+- `LOGO_MODE=data` embeds the local logo as a data URI with no attachment, but Gmail/Outlook often block this in received emails.
+- `LOGO_MODE=none` hides the logo.

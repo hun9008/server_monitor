@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 import argparse
+import base64
 import html
 import os
 import re
 import smtplib
 from email.message import EmailMessage
+from email.utils import make_msgid
+from pathlib import Path
 
 
 def env_bool(name: str, default: bool) -> bool:
@@ -134,9 +137,45 @@ def render_markdown_report(body: str) -> str:
     return "\n".join(rendered)
 
 
-def render_html_report(body: str) -> str:
-    rendered_body = render_markdown_report(body)
+def split_report_header(body: str) -> tuple[str | None, str | None, str]:
+    lines = body.splitlines()
+    if not lines or not lines[0].startswith("# "):
+        return None, None, body
+
+    title = lines[0][2:].strip()
+    index = 1
+    while index < len(lines) and not lines[index].strip():
+        index += 1
+
+    meta = None
+    if index < len(lines) and not lines[index].startswith("#"):
+      meta = lines[index].strip()
+      index += 1
+
+    while index < len(lines) and not lines[index].strip():
+        index += 1
+
+    return title, meta, "\n".join(lines[index:])
+
+
+def render_html_report(body: str, logo_src: str | None = None) -> str:
+    title, meta, body_without_header = split_report_header(body)
+    rendered_body = render_markdown_report(body_without_header)
     wrap_class = "wrap urgent-wrap" if body.startswith("# Urgent") else "wrap"
+    brand_html = ""
+    if title:
+        logo_html = ""
+        if logo_src:
+            logo_html = f'<img src="{logo_src}" alt="DILAB" class="brand-logo">'
+        brand_html = f"""\
+      <div class="brand">
+        <div class="brand-copy">
+          <h1 class="brand-title">{render_inline(title)}</h1>
+          <div class="brand-meta">{render_inline(meta or "")}</div>
+        </div>
+        {logo_html}
+      </div>
+"""
     return f"""\
 <!doctype html>
 <html>
@@ -160,6 +199,34 @@ def render_html_report(body: str) -> str:
       }}
       .urgent-wrap {{
         border-color: #fecaca;
+      }}
+      .brand {{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        margin: 0 0 20px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid #e5e7eb;
+      }}
+      .brand-copy {{
+        min-width: 0;
+      }}
+      .brand-title {{
+        margin: 0;
+        font-size: 24px;
+        line-height: 1.25;
+      }}
+      .brand-meta {{
+        margin-top: 6px;
+        color: #4b5563;
+        font-size: 13px;
+      }}
+      .brand-logo {{
+        display: block;
+        width: 168px;
+        max-width: 32%;
+        height: auto;
       }}
       h1 {{
         margin: 0 0 8px;
@@ -224,11 +291,26 @@ def render_html_report(body: str) -> str:
   </head>
   <body>
     <div class="{wrap_class}">
+{brand_html}
       {rendered_body}
     </div>
   </body>
 </html>
 """
+
+
+def logo_data_uri(logo_path: Path) -> str | None:
+    if not logo_path.is_file():
+        return None
+    encoded = base64.b64encode(logo_path.read_bytes()).decode("ascii")
+    return f"data:image/png;base64,{encoded}"
+
+
+def logo_mode() -> str:
+    mode = os.environ.get("LOGO_MODE", "cid").lower()
+    if mode not in {"cid", "url", "data", "none"}:
+        return "cid"
+    return mode
 
 
 def main() -> None:
@@ -241,6 +323,20 @@ def main() -> None:
     smtp_tls = env_bool("SMTP_TLS", True)
     smtp_html = env_bool("SMTP_HTML", True)
     smtp_timeout = int(os.environ.get("SMTP_TIMEOUT", "30"))
+    logo_path = Path(os.environ.get("LOGO_PATH", Path(__file__).with_name("dilab_logo.png")))
+    logo_url = os.environ.get("LOGO_URL")
+    logo_src = None
+    logo_cid = None
+    mode = logo_mode()
+
+    if smtp_html:
+        if logo_url:
+            logo_src = logo_url
+        elif mode == "data":
+            logo_src = logo_data_uri(logo_path)
+        elif mode == "cid" and logo_path.is_file():
+            logo_cid = make_msgid(domain="server-monitoring.local")[1:-1]
+            logo_src = f"cid:{logo_cid}"
 
     msg = EmailMessage()
     msg["From"] = args.mail_from
@@ -252,7 +348,16 @@ def main() -> None:
 
     msg.set_content(body)
     if smtp_html:
-        msg.add_alternative(render_html_report(body), subtype="html")
+        msg.add_alternative(render_html_report(body, logo_src=logo_src), subtype="html")
+        if logo_cid:
+            html_part = msg.get_payload()[-1]
+            html_part.add_related(
+                logo_path.read_bytes(),
+                maintype="image",
+                subtype="png",
+                cid=f"<{logo_cid}>",
+                disposition="inline",
+            )
 
     with smtplib.SMTP(smtp_host, smtp_port, timeout=smtp_timeout) as smtp:
         if smtp_tls:
