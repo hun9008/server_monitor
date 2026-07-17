@@ -41,6 +41,11 @@ def percent_color(value: float) -> str:
 def render_inline(text: str) -> str:
     escaped = html.escape(text)
 
+    def bold_repl(match: re.Match[str]) -> str:
+        return f"<strong>{match.group(1)}</strong>"
+
+    escaped = re.sub(r"\*\*([^*]+)\*\*", bold_repl, escaped)
+
     def code_repl(match: re.Match[str]) -> str:
         return f"<code>{match.group(1)}</code>"
 
@@ -101,7 +106,7 @@ def render_markdown_report(body: str) -> str:
     lines = body.splitlines()
     rendered = []
     i = 0
-    urgent_mode = body.startswith("# Urgent")
+    urgent_mode = body.startswith("# Urgent") or body.startswith("# [Urgent]")
 
     while i < len(lines):
         line = lines[i]
@@ -221,6 +226,9 @@ def render_html_report(body: str, logo_src: str | None = None) -> str:
         margin-top: 6px;
         color: #4b5563;
         font-size: 13px;
+      }}
+      .urgent-wrap .brand-meta {{
+        color: #111827;
       }}
       .brand-logo {{
         display: block;

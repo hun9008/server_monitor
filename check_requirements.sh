@@ -53,6 +53,7 @@ declare -A PACKAGE_FOR_CMD=(
   [df]=coreutils
   [du]=coreutils
   [free]=procps
+  [flock]=util-linux
   [grep]=grep
   [head]=coreutils
   [hostname]=hostname
@@ -78,6 +79,7 @@ REQUIRED_COMMANDS=(
   df
   du
   free
+  flock
   grep
   head
   hostname

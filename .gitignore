@@ -1,9 +1,14 @@
 .env
+.env.user
 *.pyc
 __pycache__/
 alert_state/
+user_storage_alert_state/
 test.md
 test.html
 alert_test.md
+alert_storage_test.md
+alert_storage_test.html
 *.log
 .env.example
+users.json

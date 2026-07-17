@@ -191,6 +191,10 @@ home_user_storage_usage() {
   home_size="$(df -h --output=size /home | tail -n 1 | tr -d ' ')"
   printf '```text\n'
   printf '/home capacity: %s\n\n' "$home_size"
+  if [[ "$(id -u)" -ne 0 ]]; then
+    printf 'WARNING: running as non-root; directories owned by other users may be undercounted.\n'
+    printf 'Run the script with sudo or install cron as root for accurate /home usage.\n\n'
+  fi
   du -sB1 /home/* 2>/dev/null | sort -nr | while read -r bytes path; do
     awk -v bytes="$bytes" -v total="$home_total" -v path="$path" '
       function bar(pct) {
