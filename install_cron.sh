@@ -8,4 +8,4 @@ source "${SCRIPT_DIR}/common.sh"
 install_cron_entries
 printf 'Installed server monitoring cron entries:\n'
 printf '  Snapshot: Monday 09:00\n'
-printf '  Alert check: hourly\n'
+printf '  Urgent alerts: disabled\n'

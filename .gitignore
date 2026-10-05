@@ -11,4 +11,5 @@ alert_storage_test.md
 alert_storage_test.html
 *.log
 .env.example
-users.json
+users*.json
+

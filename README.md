@@ -199,12 +199,9 @@ sudo crontab -l
 
 ```cron
 0 9 * * 1 /설치경로/monitor.sh >/tmp/server_monitoring_snapshot.log 2>&1
-0 * * * * /설치경로/alert_check.sh >/tmp/server_monitoring_alert.log 2>&1
 ```
 
 - 서버 스냅샷: 매주 월요일 09:00
-- 메모리 및 스토리지 임계치 점검: 매시간
-- 전체 서버 경고 기본 쿨다운: 12시간
 
 전체 서버 경고 설정은 `.env`에서 변경할 수 있습니다.
 

@@ -199,12 +199,9 @@ Default schedule:
 
 ```cron
 0 9 * * 1 /installation/path/monitor.sh >/tmp/server_monitoring_snapshot.log 2>&1
-0 * * * * /installation/path/alert_check.sh >/tmp/server_monitoring_alert.log 2>&1
 ```
 
 - Server snapshot: Monday at 09:00
-- Memory and storage threshold check: every hour
-- Default server-wide alert cooldown: 12 hours
 
 Server-wide alert settings can be changed in `.env`:
 

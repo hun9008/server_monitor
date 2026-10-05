@@ -27,6 +27,14 @@ load_config() {
   elif [[ "$HOSTNAME_FQDN" != *.* ]]; then
     HOSTNAME_FQDN="${HOSTNAME_FQDN}.localdomain"
   fi
+
+  case "$HOST_SHORT" in
+    dilab-sc|dilab-sc-01) HOST_DISPLAY_NAME="TIGER" ;;
+    dilab-sc2|dilab-sc-02) HOST_DISPLAY_NAME="NEXT" ;;
+    oem-MD72-HB3-00) HOST_DISPLAY_NAME="POSEIDON H" ;;
+    oem-MD72-HB1-000) HOST_DISPLAY_NAME="POSEIDON B" ;;
+    *) HOST_DISPLAY_NAME="$HOST_SHORT" ;;
+  esac
 }
 
 now_string() {
@@ -282,18 +290,8 @@ write_snapshot_report() {
 
   : > "$output_file"
   {
-    printf '# %s Server Snapshot\n\n' "$HOST_SHORT"
+    printf '# %s Server Snapshot\n\n' "$HOST_DISPLAY_NAME"
     printf '`%s` | `%s`\n\n' "$now" "$(uptime -p 2>/dev/null || uptime)"
-
-    printf '## Quick Read\n\n'
-    printf '| Metric | Value | Status |\n'
-    printf '|---|---:|---|\n'
-    quick_read_row "CPU usage" "$cpu_sample" "$(status_for_percent "$cpu_sample")"
-    quick_read_row "Memory usage" "$memory_pct" "$(status_for_percent "$memory_pct")"
-    quick_read_row "Total storage usage" "$total_storage_pct" "$(status_for_percent "$total_storage_pct")"
-    quick_read_row "Home storage usage" "${home_storage_pct:-N/A}" "$(status_for_percent "${home_storage_pct:-0%}")"
-    gpu_quick_read
-    quick_read_row "Failed services" "$failed_count" "OK"
 
     printf '\n## Resource Bars\n\n'
     printf '```text\n'
@@ -333,6 +331,16 @@ write_snapshot_report() {
 
     printf '\n## Recent Failed Systemd Units\n\n'
     failed_units_block
+
+    printf '\n## Quick Read\n\n'
+    printf '| Metric | Value | Status |\n'
+    printf '|---|---:|---|\n'
+    quick_read_row "CPU usage" "$cpu_sample" "$(status_for_percent "$cpu_sample")"
+    quick_read_row "Memory usage" "$memory_pct" "$(status_for_percent "$memory_pct")"
+    quick_read_row "Total storage usage" "$total_storage_pct" "$(status_for_percent "$total_storage_pct")"
+    quick_read_row "Home storage usage" "${home_storage_pct:-N/A}" "$(status_for_percent "${home_storage_pct:-0%}")"
+    gpu_quick_read
+    quick_read_row "Failed services" "$failed_count" "OK"
   } >> "$output_file"
 }
 
@@ -517,10 +525,13 @@ install_cron_entries() {
   local cron_file
   cron_file="$(mktemp)"
 
-  crontab -l 2>/dev/null | grep -v 'server_monitoring/monitor.sh' | grep -v 'server_monitoring/alert_check.sh' > "$cron_file" || true
+  crontab -l 2>/dev/null \
+    | grep -v 'server_monitoring/monitor.sh' \
+    | grep -v 'server_monitoring/alert_check.sh' \
+    | grep -v 'server_monitoring/user_storage_alert.sh' \
+    > "$cron_file" || true
   {
     printf '0 9 * * 1 %s/monitor.sh >/tmp/server_monitoring_snapshot.log 2>&1\n' "$SCRIPT_DIR"
-    printf '0 * * * * %s/alert_check.sh >/tmp/server_monitoring_alert.log 2>&1\n' "$SCRIPT_DIR"
   } >> "$cron_file"
   crontab "$cron_file"
   rm -f "$cron_file"

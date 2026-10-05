@@ -41,7 +41,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 REPORT_FILE="${REPORT_FILE:-/tmp/server-monitor-${HOSTNAME_FQDN}.md}"
-SUBJECT="${SUBJECT:-[Server Snapshot] ${HOSTNAME_FQDN} $(now_string)}"
+SUBJECT="${SUBJECT:-[Server Snapshot] ${HOST_DISPLAY_NAME} $(now_string)}"
 
 write_snapshot_report "$REPORT_FILE"
 
